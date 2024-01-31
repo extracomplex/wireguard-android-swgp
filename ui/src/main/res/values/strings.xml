@@ -63,7 +63,7 @@
     <string name="allow_remote_control_intents_summary_on">External apps may toggle tunnels (advanced)</string>
     <string name="allow_remote_control_intents_title">Allow remote control apps</string>
     <string name="allowed_ips">Allowed IPs</string>
-    <string name="app_name" translatable="false">WireGuard</string>
+    <string name="app_name" translatable="false">WireGuard SWGP</string>
     <string name="bad_config_context">%1$s\'s %2$s</string>
     <string name="bad_config_context_top_level">%s</string>
     <string name="bad_config_error">%1$s in %2$s</string>
@@ -124,6 +124,7 @@
     <string name="error_up">Error bringing up tunnel: %s</string>
     <string name="exclude_private_ips">Exclude private IPs</string>
     <string name="generate_new_private_key">Generate new private key</string>
+    <string name="generate_new_obfuscate_key">Generate new obfuscate key</string>
     <string name="generic_error">Unknown “%s” error</string>
     <string name="hint_automatic">(auto)</string>
     <string name="hint_generated">(generated)</string>
@@ -184,6 +185,7 @@
     <string name="pre_shared_key_enabled">enabled</string>
     <string name="private_key">Private key</string>
     <string name="public_key">Public key</string>
+    <string name="obfuscate_key">Obfuscate key</string>
     <string name="qr_code_hint">Tip: generate with `qrencode -t ansiutf8 &lt; tunnel.conf`.</string>
     <string name="quick_settings_tile_add_title">Add tile to quick settings panel</string>
     <string name="quick_settings_tile_add_summary">The shortcut tile toggles the most recent tunnel</string>

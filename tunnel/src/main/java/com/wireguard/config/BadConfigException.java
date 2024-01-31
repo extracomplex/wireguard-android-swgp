@@ -78,6 +78,7 @@ public class BadConfigException extends Exception {
         PERSISTENT_KEEPALIVE("PersistentKeepalive"),
         PRE_SHARED_KEY("PresharedKey"),
         PRIVATE_KEY("PrivateKey"),
+        OBFUSCATE_KEY("ObfuscateKey"),
         PUBLIC_KEY("PublicKey");
 
         private final String name;

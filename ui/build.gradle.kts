@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val pkg: String = providers.gradleProperty("wireguardPackageName").get()
+val pkg_swgp = pkg + "_swgp"
 
 plugins {
     alias(libs.plugins.android.application)
@@ -20,7 +21,7 @@ android {
     }
     namespace = pkg
     defaultConfig {
-        applicationId = pkg
+        applicationId = pkg_swgp //pkg
         minSdk = 21
         targetSdk = 34
         versionCode = providers.gradleProperty("wireguardVersionCode").get().toInt()

@@ -133,11 +133,40 @@
                                 android:hint="@string/hint_generated"
                                 android:imeOptions="actionNext"
                                 android:nextFocusUp="@id/private_key_text"
-                                android:nextFocusDown="@id/addresses_label_text"
-                                android:nextFocusForward="@id/addresses_label_text"
+                                android:nextFocusDown="@id/obfuscate_key_text"
+                                android:nextFocusForward="@id/obfuscate_key_text"
                                 android:onClick="@{ClipboardUtils::copyTextView}"
                                 android:singleLine="true"
                                 android:text="@{config.interface.publicKey}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/obfuscate_key_text_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:hint="@string/obfuscate_key"
+                            app:expandedHintEnabled="false"
+                            app:endIconContentDescription="@string/generate_new_obfuscate_key"
+                            app:endIconDrawable="@drawable/ic_action_generate"
+                            app:endIconMode="custom"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/public_key_label_layout">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/obfuscate_key_text"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/hint_optional"
+                                android:imeOptions="actionNext"
+                                android:inputType="textNoSuggestions|textPassword"
+                                android:nextFocusUp="@id/private_key_text"
+                                android:nextFocusDown="@id/public_key_text"
+                                android:nextFocusForward="@id/public_key_text"
+                                android:onClick="@{fragment::onKeyClick}"
+                                android:text="@={config.interface.obfuscateKey}"
+                                app:filter="@{KeyInputFilter.newInstance()}"
+                                app:onFocusChange="@{fragment::onKeyFocusChange}" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
@@ -150,7 +179,7 @@
                             app:layout_constraintHorizontal_chainStyle="spread"
                             app:layout_constraintHorizontal_weight="0.7"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/public_key_label_layout">
+                            app:layout_constraintTop_toBottomOf="@+id/obfuscate_key_text_layout">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/addresses_label_text"
@@ -158,7 +187,7 @@
                                 android:layout_height="wrap_content"
                                 android:imeOptions="actionNext"
                                 android:inputType="textNoSuggestions|textVisiblePassword"
-                                android:nextFocusUp="@id/public_key_text"
+                                android:nextFocusUp="@id/obfuscate_key_text"
                                 android:nextFocusDown="@id/dns_servers_text"
                                 android:nextFocusForward="@id/listen_port_text"
                                 android:text="@={config.interface.addresses}" />
@@ -174,7 +203,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_weight="0.3"
                             app:layout_constraintStart_toEndOf="@id/addresses_label_layout"
-                            app:layout_constraintTop_toBottomOf="@id/public_key_label_layout">
+                            app:layout_constraintTop_toBottomOf="@id/obfuscate_key_text_layout">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/listen_port_text"

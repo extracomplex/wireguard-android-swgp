@@ -79,6 +79,7 @@ class TunnelEditorFragment : BaseFragment(), MenuProvider {
         binding?.apply {
             executePendingBindings()
             privateKeyTextLayout.setEndIconOnClickListener { config?.`interface`?.generateKeyPair() }
+            obfuscateKeyTextLayout.setEndIconOnClickListener { config?.`interface`?.generateObfuscateKey() }
         }
         return binding?.root
     }

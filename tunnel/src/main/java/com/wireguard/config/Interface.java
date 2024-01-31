@@ -44,6 +44,7 @@ public final class Interface {
     private final Set<String> excludedApplications;
     private final Set<String> includedApplications;
     private final KeyPair keyPair;
+    private final Optional<Key> obfuscateKey;
     private final Optional<Integer> listenPort;
     private final Optional<Integer> mtu;
 
@@ -55,6 +56,7 @@ public final class Interface {
         excludedApplications = Collections.unmodifiableSet(new LinkedHashSet<>(builder.excludedApplications));
         includedApplications = Collections.unmodifiableSet(new LinkedHashSet<>(builder.includedApplications));
         keyPair = Objects.requireNonNull(builder.keyPair, "Interfaces must have a private key");
+        obfuscateKey = Optional.ofNullable(builder.obfuscateKey);
         listenPort = builder.listenPort;
         mtu = builder.mtu;
     }
@@ -95,6 +97,9 @@ public final class Interface {
                 case "privatekey":
                     builder.parsePrivateKey(attribute.getValue());
                     break;
+                case "obfuscatekey":
+                    builder.parseObfuscateKey(attribute.getValue());
+                    break;
                 default:
                     throw new BadConfigException(Section.INTERFACE, Location.TOP_LEVEL,
                             Reason.UNKNOWN_ATTRIBUTE, attribute.getKey());
@@ -114,6 +119,7 @@ public final class Interface {
                 && excludedApplications.equals(other.excludedApplications)
                 && includedApplications.equals(other.includedApplications)
                 && keyPair.equals(other.keyPair)
+                && obfuscateKey.equals(other.obfuscateKey)
                 && listenPort.equals(other.listenPort)
                 && mtu.equals(other.mtu);
     }
@@ -177,6 +183,8 @@ public final class Interface {
         return keyPair;
     }
 
+    public Optional<Key> getObfuscateKey() {return  obfuscateKey;}
+
     /**
      * Returns the UDP port number that the WireGuard interface will listen on.
      *
@@ -203,6 +211,7 @@ public final class Interface {
         hash = 31 * hash + excludedApplications.hashCode();
         hash = 31 * hash + includedApplications.hashCode();
         hash = 31 * hash + keyPair.hashCode();
+        hash = 31 * hash + obfuscateKey.hashCode();
         hash = 31 * hash + listenPort.hashCode();
         hash = 31 * hash + mtu.hashCode();
         return hash;
@@ -245,6 +254,7 @@ public final class Interface {
         listenPort.ifPresent(lp -> sb.append("ListenPort = ").append(lp).append('\n'));
         mtu.ifPresent(m -> sb.append("MTU = ").append(m).append('\n'));
         sb.append("PrivateKey = ").append(keyPair.getPrivateKey().toBase64()).append('\n');
+        obfuscateKey.ifPresent(ok -> sb.append("ObfuscateKey = ").append(ok.toBase64()).append('\n'));
         return sb.toString();
     }
 
@@ -258,6 +268,7 @@ public final class Interface {
         final StringBuilder sb = new StringBuilder();
         sb.append("private_key=").append(keyPair.getPrivateKey().toHex()).append('\n');
         listenPort.ifPresent(lp -> sb.append("listen_port=").append(lp).append('\n'));
+        obfuscateKey.ifPresent(ok -> sb.append("obfuscate_key=").append(ok.toHex()).append('\n'));
         return sb.toString();
     }
 
@@ -276,6 +287,7 @@ public final class Interface {
         // No default; must be provided before building.
         @Nullable private KeyPair keyPair;
         // Defaults to not present.
+        @Nullable private Key obfuscateKey;
         private Optional<Integer> listenPort = Optional.empty();
         // Defaults to not present.
         private Optional<Integer> mtu = Optional.empty();
@@ -399,8 +411,21 @@ public final class Interface {
             }
         }
 
+        public Builder parseObfuscateKey(final String obfuscateKey) throws BadConfigException {
+            try {
+                return setObfuscateKey(Key.fromBase64(obfuscateKey));
+            } catch (final KeyFormatException e) {
+                throw new BadConfigException(Section.INTERFACE, Location.OBFUSCATE_KEY, e);
+            }
+        }
+
         public Builder setKeyPair(final KeyPair keyPair) {
             this.keyPair = keyPair;
+            return this;
+        }
+
+        public Builder setObfuscateKey(final Key obfuscateKey) {
+            this.obfuscateKey = obfuscateKey;
             return this;
         }
 

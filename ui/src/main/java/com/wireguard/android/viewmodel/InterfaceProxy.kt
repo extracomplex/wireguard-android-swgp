@@ -17,6 +17,8 @@ import com.wireguard.config.Interface
 import com.wireguard.crypto.Key
 import com.wireguard.crypto.KeyFormatException
 import com.wireguard.crypto.KeyPair
+import kotlin.jvm.optionals.getOrDefault
+import kotlin.jvm.optionals.getOrElse
 
 class InterfaceProxy : BaseObservable, Parcelable {
     @get:Bindable
@@ -62,6 +64,13 @@ class InterfaceProxy : BaseObservable, Parcelable {
         }
 
     @get:Bindable
+    var obfuscateKey: String = ""
+        set(value) {
+            field = value
+            notifyPropertyChanged(BR.obfuscateKey)
+        }
+
+    @get:Bindable
     val publicKey: String
         get() = try {
             KeyPair(Key.fromBase64(privateKey)).publicKey.toBase64()
@@ -77,6 +86,7 @@ class InterfaceProxy : BaseObservable, Parcelable {
         listenPort = parcel.readString() ?: ""
         mtu = parcel.readString() ?: ""
         privateKey = parcel.readString() ?: ""
+        obfuscateKey = parcel.readString() ?: ""
     }
 
     constructor(other: Interface) {
@@ -89,6 +99,7 @@ class InterfaceProxy : BaseObservable, Parcelable {
         mtu = other.mtu.map { it.toString() }.orElse("")
         val keyPair = other.keyPair
         privateKey = keyPair.privateKey.toBase64()
+        obfuscateKey = other.obfuscateKey.map { it.toBase64() }.getOrDefault("")
     }
 
     constructor()
@@ -102,6 +113,11 @@ class InterfaceProxy : BaseObservable, Parcelable {
         notifyPropertyChanged(BR.publicKey)
     }
 
+    fun generateObfuscateKey() {
+        obfuscateKey = KeyPair().publicKey.toBase64()
+        notifyPropertyChanged(BR.obfuscateKey)
+    }
+
     @Throws(BadConfigException::class)
     fun resolve(): Interface {
         val builder = Interface.Builder()
@@ -112,6 +128,7 @@ class InterfaceProxy : BaseObservable, Parcelable {
         if (listenPort.isNotEmpty()) builder.parseListenPort(listenPort)
         if (mtu.isNotEmpty()) builder.parseMtu(mtu)
         if (privateKey.isNotEmpty()) builder.parsePrivateKey(privateKey)
+        if (obfuscateKey.isNotEmpty()) builder.parseObfuscateKey(obfuscateKey)
         return builder.build()
     }
 
@@ -123,6 +140,7 @@ class InterfaceProxy : BaseObservable, Parcelable {
         dest.writeString(listenPort)
         dest.writeString(mtu)
         dest.writeString(privateKey)
+        dest.writeString(obfuscateKey)
     }
 
     private class InterfaceProxyCreator : Parcelable.Creator<InterfaceProxy> {
